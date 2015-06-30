@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">GameShareApp</string>
+    <string name="username">Username</string>
+    <string name="title_activity_register">RegisterActivity</string>
+    <string name="register">Create account</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="email">Email</string>
+    <string name="error_invalid_email">Invalid Email</string>
+    <string name="zipcode">Zipcode</string>
+    <string name="error_invalid_zipcode">Invalid Zipcode</string>
+    <string name="error_username_not_found">Invalid Username or Password</string>
+    <string name="success">Successfully logged in as</string>
+    <string name="webservice_baseurl">"https://gamematewebservice.azurewebsites.net/"</string>
+</resources>
