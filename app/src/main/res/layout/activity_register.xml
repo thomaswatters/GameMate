@@ -25,29 +25,31 @@
 
             <EditText android:id="@+id/email_register" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:hint="@string/email"
-                android:imeActionId="@+id/login"
                 android:imeOptions="actionUnspecified" android:inputType="textEmailAddress"
                 android:maxLines="1" android:singleLine="true" />
 
             <EditText android:id="@+id/location_register" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:hint="@string/zipcode"
-                android:imeActionId="@+id/login"
                 android:imeOptions="actionUnspecified" android:inputType="numberSigned"
                 android:maxLines="1" android:singleLine="true" />
 
             <EditText android:id="@+id/password_register" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:hint="@string/prompt_password"
-                android:imeActionId="@+id/login"
                 android:imeActionLabel="@string/action_sign_in_short"
                 android:imeOptions="actionUnspecified" android:inputType="textPassword"
                 android:maxLines="1" android:singleLine="true" />
             <EditText android:id="@+id/password_register2" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:hint="@string/confirm_password"
-                android:imeActionId="@+id/login"
                 android:imeActionLabel="@string/action_sign_in_short"
                 android:imeOptions="actionUnspecified" android:inputType="textPassword"
                 android:maxLines="1" android:singleLine="true" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/holo_red_light"
+                android:text=""
+                android:id="@+id/txt_register_error"/>
             <!--Sign in button-->
             <Button android:id="@+id/user_register_button" style="?android:textAppearanceSmall"
                 android:layout_width="match_parent" android:layout_height="wrap_content"

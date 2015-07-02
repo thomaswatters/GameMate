@@ -19,28 +19,27 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 
 public class RegisterActivity extends ActionBarActivity {
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "lumalav:Hello1234*"
-    };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -63,7 +62,7 @@ public class RegisterActivity extends ActionBarActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-        // Set up the login form.
+        // Set up the register form.
         mUsernameView = (AutoCompleteTextView) findViewById(R.id.username_register);
         mPasswordView = (EditText) findViewById(R.id.password_register);
         mConfirmPasswordView = (EditText) findViewById(R.id.password_register2);
@@ -206,7 +205,7 @@ public class RegisterActivity extends ActionBarActivity {
     }
 
     private boolean isPasswordValid(String password) {
-        return Pattern.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[#$%^&+=*])(?=\\S+$).{8,}$", password);
+        return Pattern.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[#$!%^&+=*])(?=\\S+$).{8,}$", password);
     }
 
     /**
@@ -276,6 +275,7 @@ public class RegisterActivity extends ActionBarActivity {
 
         private CreateUserModel model;
         private String baseUrl;
+        private List<String> errors;
 
         UserRegisterTask(CreateUserModel model, String baseUrl) {
             this.model = model;
@@ -290,6 +290,7 @@ public class RegisterActivity extends ActionBarActivity {
             String url = baseUrl + "api/accounts/register";
             String data = null;
             String result = null;
+
             try {
                 //Connect
                 httpcon = (HttpURLConnection) ((new URL(url).openConnection()));
@@ -308,37 +309,53 @@ public class RegisterActivity extends ActionBarActivity {
                 os.close();
 
                 //Read
-                BufferedReader br = new BufferedReader(new InputStreamReader(httpcon.getInputStream(),"UTF-8"));
+                BufferedReader br;
+                try {
+                    br = new BufferedReader(new InputStreamReader(httpcon.getInputStream(), "UTF-8"));
 
-                String line = null;
-                StringBuilder sb = new StringBuilder();
-
-                while ((line = br.readLine()) != null) {
-                    sb.append(line);
+                    httpcon.disconnect();
+                    return true;
                 }
+                catch (IOException e)
+                {
+                    br = new BufferedReader(new InputStreamReader(httpcon.getErrorStream(), "UTF-8"));
 
-                br.close();
-                result = sb.toString();
-            } catch (Exception e){
+                    String line = null;
+                    StringBuilder sb = new StringBuilder();
 
+                    while ((line = br.readLine()) != null) {
+                        sb.append(line);
+                    }
+
+                    br.close();
+                    result = sb.toString();
+
+                    JSONObject json = new JSONObject(result).getJSONObject("modelState");
+                    JSONArray names = json.names();
+                    errors = new ArrayList<String>();
+                    for(int i = 0; i < names.length(); i++)
+                    {
+                        JSONArray values = json.getJSONArray(names.get(i).toString());
+                        for(int j = 0; j < values.length(); j++)
+                        {
+                            errors.add(values.getString(j));
+                        }
+                    }
+
+                    httpcon.disconnect();
+                    return false;
+
+                }
             }
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
+            catch (IOException e)
+            {
                 return false;
             }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(model.userName)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(model.passWord);
-                }
+            catch (Exception e){
+                System.err.println(e.getMessage());
             }
 
-            // TODO: register the new account here.
-            return true;
+            return false;
         }
 
         @Override
@@ -347,10 +364,14 @@ public class RegisterActivity extends ActionBarActivity {
             showProgress(false);
 
             if (success) {
+                Toast.makeText(getApplicationContext(), getString(R.string.register_success), Toast.LENGTH_LONG).show();
                 finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                StringBuilder builder = new StringBuilder();
+                for(String str : errors)
+                    builder.append("*" + str + "\n\n");
+
+                ((TextView)findViewById(R.id.txt_register_error)).setText(builder.toString());
             }
         }
 

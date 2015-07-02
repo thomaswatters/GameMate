@@ -12,5 +12,6 @@
     <string name="error_invalid_zipcode">Invalid Zipcode</string>
     <string name="error_username_not_found">Invalid Username or Password</string>
     <string name="success">Successfully logged in as</string>
-    <string name="webservice_baseurl">"https://gamematewebservice.azurewebsites.net/"</string>
+    <string name="webservice_baseurl">"https://gamemateservice.azurewebsites.net/"</string>
+    <string name="register_success">Thank You! Please check your email to activate your account</string>
 </resources>
