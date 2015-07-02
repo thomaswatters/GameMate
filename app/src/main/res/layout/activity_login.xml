@@ -29,6 +29,13 @@
                 android:imeOptions="actionUnspecified" android:inputType="textPassword"
                 android:maxLines="1" android:singleLine="true" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/holo_red_light"
+                android:text=""
+                android:id="@+id/txt_login_error"/>
+
             <!--Sign in button-->
             <Button android:id="@+id/user_sign_in_button" style="?android:textAppearanceSmall"
                 android:layout_width="match_parent" android:layout_height="wrap_content"

@@ -8,6 +8,7 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -66,16 +67,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
-            }
-        });
 
         Button mUserSignInButton = (Button) findViewById(R.id.user_sign_in_button);
         mUserSignInButton.setOnClickListener(new OnClickListener() {
@@ -247,6 +238,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         private final String mUsername;
         private final String mPassword;
 
+        private String error_msg;
+
         UserLoginTask(String username, String password) {
             mUsername = username;
             mPassword = password;
@@ -256,6 +249,38 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
+
+            AuthServiceProvider auth = new AuthServiceProvider();
+
+            try
+            {
+                String message = auth.Login(mUsername, mPassword);
+                if(auth.isBadRequest())
+                {
+                    SharedPreferences sp = getSharedPreferences("UserCred", MODE_PRIVATE);
+                    sp.edit().clear();
+                    sp.edit().commit();
+
+                    error_msg = message;
+
+
+
+                    return false;
+                }
+                else
+                {
+                    SharedPreferences sp = getSharedPreferences("UserCred", MODE_PRIVATE);
+                    sp.edit().putString("Token", message);
+                    sp.edit().putBoolean("IsAuth", true);
+                    sp.edit().commit();
+
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
             try {
                 // Simulate network access.
                 Thread.sleep(2000);
@@ -284,11 +309,14 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             showProgress(false);
 
             if (success) {
-                Toast.makeText(getApplicationContext(), R.string.success + mUsername, Toast.LENGTH_SHORT );
-                finish();
+                Toast.makeText(getApplicationContext(), getString(R.string.success) + " " + mUsername, Toast.LENGTH_LONG ).show();
+//                finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_username_not_found));
-                mPasswordView.requestFocus();
+
+
+                ((TextView)findViewById(R.id.txt_login_error)).setText(error_msg);
+//                mPasswordView.setError(error_msg);
+//                mPasswordView.requestFocus();
             }
         }
 
