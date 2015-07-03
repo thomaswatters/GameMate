@@ -1,0 +1,131 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    style="@style/list_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- This is the base Inner View inside a CardHeader.
+         You can customize it with your layout xml file and your CardHeader.
+         You can popolate your element with CardHeader#setupInnerViewElements() method -->
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:layout_margin="5dp">
+
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="85dp"
+
+            android:id="@+id/imageView"
+            android:src="@android:drawable/ic_menu_report_image" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/game_system"
+                style="@style/native_list_card.thumbnail"
+                android:textSize="15sp"
+                android:background="#ffffff"
+                android:paddingLeft="10dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:textColor="#000000"
+                android:text="@string/game_system"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/sell_layout"
+                android:visibility="invisible">
+
+                <ImageView
+                    android:layout_marginTop="3dp"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:id="@+id/imageView2"
+                    android:src="@android:drawable/checkbox_on_background" />
+
+                <TextView
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/sell"
+                    android:id="@+id/textView" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/share_layout"
+                android:visibility="invisible">
+
+                <ImageView
+                    android:layout_marginTop="3dp"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:id="@+id/imageView3"
+                    android:src="@android:drawable/checkbox_on_background" />
+
+                <TextView
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/share"
+                    android:id="@+id/textView3" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/trade_layout"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible">
+
+                <ImageView
+                    android:layout_marginTop="3dp"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:id="@+id/imageView4"
+                    android:src="@android:drawable/checkbox_on_background" />
+
+                <TextView
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/trade"
+                    android:id="@+id/textView4" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/date"
+            android:id="@+id/date"
+            android:gravity="center_vertical|center_horizontal"/>
+
+    </LinearLayout>
+</LinearLayout>

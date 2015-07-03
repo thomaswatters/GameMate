@@ -14,4 +14,12 @@
     <string name="success">Successfully logged in as</string>
     <string name="webservice_baseurl">"https://gamemateservice.azurewebsites.net/"</string>
     <string name="register_success">Thank You! Please check your email to activate your account</string>
+    <string name="title_activity_view_games">ViewGamesActivity</string>
+    <string name="game_title">Game title</string>
+    <string name="game_system">System</string>
+    <string name="sell">Sell</string>
+    <string name="share">Share</string>
+    <string name="trade">Trade</string>
+    <string name="date">Date added</string>
+    <string name="my_games">My Games</string>
 </resources>
