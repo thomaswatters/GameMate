@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -24,6 +25,10 @@
         <activity
             android:name=".ViewGamesActivity"
             android:label="@string/my_games" >
+        </activity>
+        <activity
+            android:name=".AddGameActivity"
+            android:label="@string/add_game" >
         </activity>
     </application>
 

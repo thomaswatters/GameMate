@@ -1,17 +1,22 @@
 package com.gameshare.luisman.gameshareapp;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+
+import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
-import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.view.CardListView;
 
 
@@ -38,7 +43,7 @@ public class ViewGamesActivity extends ActionBarActivity {
             DummyUserGame game = new DummyUserGame("Halo " + i, "Nintendo " + i, flags);
             game.setDate("1/1/2001");
             game.setImageUrl("https://flugelmeister.files.wordpress.com/2011/03/halo-2.jpg");
-            UserGameCard card = new UserGameCard(getApplicationContext(), R.layout.user_game_card_inner_content, game);
+            UserGameCard card = new UserGameCard(this, R.layout.user_game_card_inner_content, game);
             cards.add(card);
         }
 
@@ -71,5 +76,26 @@ public class ViewGamesActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public static void showIt(final Context context, final UserGameCard gameToBeDeleted){
+        new MaterialDialog.Builder(context)
+                .content(R.string.delete_confirmation)
+                .positiveText(R.string.confirm_delete)
+                .negativeText(R.string.no)
+                .callback(new MaterialDialog.ButtonCallback() {
+                    @Override
+                    public void onPositive(MaterialDialog dialog) {
+                        cards.remove(gameToBeDeleted);
+                        mCardArrayAdapter.notifyDataSetChanged();
+                        Toast.makeText(context, gameToBeDeleted.userGame.getTitle() + " has been deleted", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onNegative(MaterialDialog dialog) {
+                        Toast.makeText(context, "Neih", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .show();
     }
 }

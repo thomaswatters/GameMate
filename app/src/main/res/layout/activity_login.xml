@@ -52,6 +52,22 @@
                 android:onClick="startRegisterActivity"
                 android:clickable="true"/>
 
+
+            <!--Temp buttons-->
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="My Games"
+                android:id="@+id/temp_button_my_games" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Game"
+                android:id="@+id/temp_button_add_game" />
+
         </LinearLayout>
     </ScrollView>
 

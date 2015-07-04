@@ -15,11 +15,17 @@
     <string name="webservice_baseurl">"https://gamemateservice.azurewebsites.net/"</string>
     <string name="register_success">Thank You! Please check your email to activate your account</string>
     <string name="title_activity_view_games">ViewGamesActivity</string>
-    <string name="game_title">Game title</string>
+    <string name="game_title">Game Title</string>
     <string name="game_system">System</string>
     <string name="sell">Sell</string>
     <string name="share">Share</string>
     <string name="trade">Trade</string>
     <string name="date">Date added</string>
     <string name="my_games">My Games</string>
+    <string name="delete_confirmation">Are you sure you want to delete this game?</string>
+    <string name="delete_title">\?!?</string>
+    <string name="confirm_delete">Kill it!</string>
+    <string name="no">No!</string>
+    <string name="title_activity_add_game">AddGameActivity</string>
+    <string name="add_game">Add Game</string>
 </resources>

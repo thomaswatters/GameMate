@@ -1,12 +1,12 @@
 package com.gameshare.luisman.gameshareapp;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +16,13 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -62,12 +62,8 @@ public class UserGameCard extends Card {
                 }
                 if(item.getTitle() == "Delete")
                 {
-                    UserGameCard a = (UserGameCard) card;
-                    DummyUserGame ug = a.userGame;
-                    Toast.makeText(context, ug.getTitle() + " has been deleted", Toast.LENGTH_SHORT).show();
-
-                    ViewGamesActivity.cards.remove(a);
-                    ViewGamesActivity.mCardArrayAdapter.notifyDataSetChanged();
+                    final UserGameCard current = (UserGameCard) card;
+                    ViewGamesActivity.showIt(context, current);
                 }
             }
         });
