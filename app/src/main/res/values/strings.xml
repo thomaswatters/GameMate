@@ -28,4 +28,17 @@
     <string name="no">No!</string>
     <string name="title_activity_add_game">AddGameActivity</string>
     <string name="add_game">Add Game</string>
+    <string name="update_game">Update Game</string>
+    <string name="delete_all_games">Delete all games</string>
+
+    <string-array name="game_platforms_array">
+        <item>Linux</item>
+        <item>Mac</item>
+        <item>Microsoft Windows</item>
+        <item>PlayStation 3</item>
+        <item>PlayStation 4</item>
+        <item>Wii U</item>
+        <item>Xbox 360</item>
+        <item>Xbox One</item>
+    </string-array>
 </resources>

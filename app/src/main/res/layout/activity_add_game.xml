@@ -5,37 +5,35 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    tools:context="com.gameshare.luisman.gameshareapp.AddGameActivity"
+    tools:context="com.gameshare.luisman.gameshareapp.AddUpdateGameActivity"
     android:weightSum="1">
 
-
-    <EditText android:id="@+id/password"
+    <EditText android:id="@+id/game_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/game_title"
-        android:imeActionId="@+id/game_title"
         android:inputType="text"
         android:maxLines="1"
         android:singleLine="true" />
 
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner" />
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner" />
 
-        <RadioButton
+        <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sell"
             android:id="@+id/sellRadioButton" />
 
-        <RadioButton
+        <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/share"
             android:id="@+id/shareRadioButton" />
 
-        <RadioButton
+        <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/trade"

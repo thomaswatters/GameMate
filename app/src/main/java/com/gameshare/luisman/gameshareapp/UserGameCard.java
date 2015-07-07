@@ -1,12 +1,10 @@
 package com.gameshare.luisman.gameshareapp;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,12 +54,14 @@ public class UserGameCard extends Card {
                 {
                     UserGameCard a = (UserGameCard) card;
                     DummyUserGame ug = a.userGame;
-                    Toast.makeText(context, ug.getTitle() + " will be edited in the AddViewActivity", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, AddUpdateGameActivity.class );
+                    intent.putExtra("editGame", ug);
+                    context.startActivity(intent);
                 }
                 if(item.getTitle() == "Delete")
                 {
                     final UserGameCard current = (UserGameCard) card;
-                    ViewGamesActivity.showIt(context, current);
+                    ViewGamesActivity.showDeleteConfirmation(context, current);
                 }
             }
         });
@@ -101,17 +99,17 @@ public class UserGameCard extends Card {
         {
             Map.Entry pair = (Map.Entry)it.next();
 
-            if(pair.getKey() == "Share" && (Boolean) pair.getValue())
+            if(pair.getKey().equals((String) "Share") && (Boolean) pair.getValue())
             {
                 shareLayout.setVisibility(View.VISIBLE);
             }
 
-            if(pair.getKey() == "Sell" && (Boolean) pair.getValue())
+            if(pair.getKey().equals((String) "Sell") && (Boolean) pair.getValue())
             {
                 sellLayout.setVisibility(View.VISIBLE);
             }
 
-            if(pair.getKey() == "Trade" && (Boolean) pair.getValue())
+            if(pair.getKey().equals((String) "Trade") && (Boolean) pair.getValue())
             {
                 tradeLayout.setVisibility(View.VISIBLE);
             }

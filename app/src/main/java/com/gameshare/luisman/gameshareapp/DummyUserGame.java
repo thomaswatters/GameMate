@@ -1,30 +1,25 @@
 package com.gameshare.luisman.gameshareapp;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * Created by LuisMan on 7/2/2015.
  */
-public class DummyUserGame
+public class DummyUserGame implements Serializable
 {
     /*
     Properties
      */
     private String title;
     private String system;
-    private HashMap<String, Boolean> flags;
     private String date;
     private String imageUrl;
+    private HashMap<String, Boolean> flags;
     /*
     Constructors
      */
     public DummyUserGame(){ }
-    public DummyUserGame(String title, String system, HashMap<String, Boolean> flags){
-        this.title = title;
-        this.system = system;
-        this.flags = flags;
-    }
-
     /*
     * Getters and setters
     * */
@@ -65,5 +60,20 @@ public class DummyUserGame
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DummyUserGame that = (DummyUserGame) o;
+
+        if (title != null ? !title.equals(that.title) : that.title != null) return false;
+        if (system != null ? !system.equals(that.system) : that.system != null) return false;
+        if (date != null ? !date.equals(that.date) : that.date != null) return false;
+        if (imageUrl != null ? !imageUrl.equals(that.imageUrl) : that.imageUrl != null)
+            return false;
+        return !(flags != null ? !flags.equals(that.flags) : that.flags != null);
     }
 }

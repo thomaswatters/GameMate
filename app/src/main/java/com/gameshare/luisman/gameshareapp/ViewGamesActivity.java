@@ -22,6 +22,7 @@ import it.gmariotti.cardslib.library.view.CardListView;
 
 public class ViewGamesActivity extends ActionBarActivity {
 
+    public static ArrayList<DummyUserGame> userGames = new ArrayList<>();
     public static ArrayList<Card> cards = null;
     public static CardArrayAdapter mCardArrayAdapter = null;
 
@@ -32,18 +33,9 @@ public class ViewGamesActivity extends ActionBarActivity {
 
         cards = new ArrayList<>();
 
-        HashMap<String, Boolean> flags = new HashMap<>();
-        flags.put("Share", true);
-        flags.put("Trade", false);
-        flags.put("Sell", true);
-
-        //Add cards to ArrayList
-        for(int i = 1; i < 6; i++){
-            //Create cards
-            DummyUserGame game = new DummyUserGame("Halo " + i, "Nintendo " + i, flags);
-            game.setDate("1/1/2001");
-            game.setImageUrl("https://flugelmeister.files.wordpress.com/2011/03/halo-2.jpg");
-            UserGameCard card = new UserGameCard(this, R.layout.user_game_card_inner_content, game);
+        for(DummyUserGame currentGame : userGames)
+        {
+            UserGameCard card = new UserGameCard(this, R.layout.user_game_card_inner_content, currentGame);
             cards.add(card);
         }
 
@@ -71,14 +63,17 @@ public class ViewGamesActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_delete_games) {
+            cards.clear();
+            userGames.clear();
+            mCardArrayAdapter.notifyDataSetChanged();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public static void showIt(final Context context, final UserGameCard gameToBeDeleted){
+    public static void showDeleteConfirmation(final Context context, final UserGameCard gameToBeDeleted){
         new MaterialDialog.Builder(context)
                 .content(R.string.delete_confirmation)
                 .positiveText(R.string.confirm_delete)
@@ -87,13 +82,13 @@ public class ViewGamesActivity extends ActionBarActivity {
                     @Override
                     public void onPositive(MaterialDialog dialog) {
                         cards.remove(gameToBeDeleted);
+                        userGames.remove(gameToBeDeleted.userGame);
                         mCardArrayAdapter.notifyDataSetChanged();
                         Toast.makeText(context, gameToBeDeleted.userGame.getTitle() + " has been deleted", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onNegative(MaterialDialog dialog) {
-                        Toast.makeText(context, "Neih", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .show();
