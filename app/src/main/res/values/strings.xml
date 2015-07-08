@@ -23,13 +23,16 @@
     <string name="date">Date added</string>
     <string name="my_games">My Games</string>
     <string name="delete_confirmation">Are you sure you want to delete this game?</string>
+    <string name="delete_confirmation2">Are you sure you want to delete all your games?</string>
     <string name="delete_title">\?!?</string>
     <string name="confirm_delete">Kill it!</string>
+    <string name="confirm_delete2">Kill them!</string>
     <string name="no">No!</string>
     <string name="title_activity_add_game">AddGameActivity</string>
     <string name="add_game">Add Game</string>
     <string name="update_game">Update Game</string>
     <string name="delete_all_games">Delete all games</string>
+    <string name="flag_not_chosen">At least one flag must be chosen</string>
 
     <string-array name="game_platforms_array">
         <item>Linux</item>
@@ -41,4 +44,7 @@
         <item>Xbox 360</item>
         <item>Xbox One</item>
     </string-array>
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="view_games">My Games</string>
+    <string name="change_settings">Change Settings</string>
 </resources>

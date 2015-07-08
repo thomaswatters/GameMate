@@ -30,6 +30,10 @@
             android:name=".AddUpdateGameActivity"
             android:label="@string/add_game" >
         </activity>
+        <activity
+            android:name=".ProfileActivity"
+            android:label="@string/title_activity_profile" >
+        </activity>
     </application>
 
 </manifest>

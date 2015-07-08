@@ -52,16 +52,19 @@ public class UserGameCard extends Card {
             public void onMenuItemClick(BaseCard card, MenuItem item) {
                 if(item.getTitle() == "Edit")
                 {
-                    UserGameCard a = (UserGameCard) card;
-                    DummyUserGame ug = a.userGame;
+                    UserGameCard currentGameCard = (UserGameCard) card;
+                    int position = ViewGamesActivity.cards.indexOf(currentGameCard);
+
+                    DummyUserGame currentUserGame = currentGameCard.userGame;
                     Intent intent = new Intent(context, AddUpdateGameActivity.class );
-                    intent.putExtra("editGame", ug);
+                    intent.putExtra("editGame", currentUserGame);
+                    intent.putExtra("position", position);
                     context.startActivity(intent);
                 }
                 if(item.getTitle() == "Delete")
                 {
-                    final UserGameCard current = (UserGameCard) card;
-                    ViewGamesActivity.showDeleteConfirmation(context, current);
+                    UserGameCard currentGameCard = (UserGameCard) card;
+                    ViewGamesActivity.showDeleteConfirmation(context, currentGameCard);
                 }
             }
         });
@@ -85,9 +88,11 @@ public class UserGameCard extends Card {
         systemTitleTv = (TextView) parent.findViewById(R.id.game_system);
         dateCreatedTv = (TextView) parent.findViewById(R.id.date);
         sellLayout = (LinearLayout) parent.findViewById(R.id.sell_layout);
+        sellLayout.setVisibility(View.INVISIBLE);
         shareLayout = (LinearLayout) parent.findViewById(R.id.share_layout);
+        shareLayout.setVisibility(View.INVISIBLE);
         tradeLayout = (LinearLayout) parent.findViewById(R.id.trade_layout);
-
+        tradeLayout.setVisibility(View.INVISIBLE);
         new AsyncUploadImage(imageView, userGame.getImageUrl()).execute();
 
         systemTitleTv.setText(userGame.getSystem());
@@ -99,17 +104,17 @@ public class UserGameCard extends Card {
         {
             Map.Entry pair = (Map.Entry)it.next();
 
-            if(pair.getKey().equals((String) "Share") && (Boolean) pair.getValue())
+            if(pair.getKey().equals("Share") && (Boolean) pair.getValue())
             {
                 shareLayout.setVisibility(View.VISIBLE);
             }
 
-            if(pair.getKey().equals((String) "Sell") && (Boolean) pair.getValue())
+            if(pair.getKey().equals("Sell") && (Boolean) pair.getValue())
             {
                 sellLayout.setVisibility(View.VISIBLE);
             }
 
-            if(pair.getKey().equals((String) "Trade") && (Boolean) pair.getValue())
+            if(pair.getKey().equals("Trade") && (Boolean) pair.getValue())
             {
                 tradeLayout.setVisibility(View.VISIBLE);
             }

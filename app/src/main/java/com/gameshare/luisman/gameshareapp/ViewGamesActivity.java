@@ -1,9 +1,13 @@
 package com.gameshare.luisman.gameshareapp;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,16 +25,18 @@ import it.gmariotti.cardslib.library.view.CardListView;
 
 
 public class ViewGamesActivity extends ActionBarActivity {
-
+    public static Context context;
     public static ArrayList<DummyUserGame> userGames = new ArrayList<>();
     public static ArrayList<Card> cards = null;
     public static CardArrayAdapter mCardArrayAdapter = null;
-
+    private BroadcastReceiver receiver;
+    private CardListView listView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_games);
 
+        context = this;
         cards = new ArrayList<>();
 
         for(DummyUserGame currentGame : userGames)
@@ -39,13 +45,45 @@ public class ViewGamesActivity extends ActionBarActivity {
             cards.add(card);
         }
 
-        mCardArrayAdapter = new CardArrayAdapter(this,cards);
+        mCardArrayAdapter = new CardArrayAdapter(this, cards);
 
-        CardListView listView = (CardListView) findViewById(R.id.myList);
+        listView = (CardListView) findViewById(R.id.myList);
         if (listView != null)
         {
             listView.setAdapter(mCardArrayAdapter);
         }
+
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                updateData();
+            }
+        };
+    }
+
+
+
+    @Override
+    protected void onStart() {
+        // TODO Auto-generated method stub
+        super.onStart();
+        LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter(AddUpdateGameActivity.COPA_RESULT));
+    }
+
+//    @Override
+//    protected void onStop() {
+//        // TODO Auto-generated method stub
+////        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+//        super.onStop();
+//    }
+
+    private void updateData() {
+//        for(Card currentCard : cards)
+//        {
+//           // UserGameCard card = new UserGameCard(this, R.layout.user_game_card_inner_content, currentGame);
+//            cards.add(currentCard);
+//        }
+        mCardArrayAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -64,9 +102,25 @@ public class ViewGamesActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_delete_games) {
-            cards.clear();
-            userGames.clear();
-            mCardArrayAdapter.notifyDataSetChanged();
+
+            new MaterialDialog.Builder(context)
+                    .content(R.string.delete_confirmation2)
+                    .positiveText(R.string.confirm_delete2)
+                    .negativeText(R.string.no)
+                    .callback(new MaterialDialog.ButtonCallback() {
+                        @Override
+                        public void onPositive(MaterialDialog dialog) {
+                            cards.clear();
+                            userGames.clear();
+                            mCardArrayAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onNegative(MaterialDialog dialog) {
+                        }
+                    })
+                    .show();
+
             return true;
         }
 

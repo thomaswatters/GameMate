@@ -1,9 +1,12 @@
 package com.gameshare.luisman.gameshareapp;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -19,7 +23,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class AddUpdateGameActivity extends ActionBarActivity {
-
+    private Context updateContext;
+    static final public String COPA_RESULT = "com.controlj.copame.backend.COPAService.REQUEST_PROCESSED";
+    private LocalBroadcastManager broadcaster;
     private EditText gameTitleEditText;
     private Spinner gameSystemSpinner;
     private Button button;
@@ -32,6 +38,7 @@ public class AddUpdateGameActivity extends ActionBarActivity {
     };
 
     private DummyUserGame gameToBeEdited;
+    private int gameToBeEditedPosition;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,22 +58,11 @@ public class AddUpdateGameActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
 
-                int position = -1;
+                gameTitleEditText.setError(null);
+                String title = gameTitleEditText.getText().toString();
+                String system = (String) gameSystemSpinner.getSelectedItem();
 
-                Boolean isUpdate = button.getText().toString().equals((String) getResources().getString(R.string.update_game));
-
-                if(isUpdate)
-                {
-                    for(position = 0; position < ViewGamesActivity.userGames.size(); position++)
-                    {
-                        DummyUserGame current = ViewGamesActivity.userGames.get(position);
-
-                        if(current.equals(gameToBeEdited))
-                            break;
-                    }
-
-                    ViewGamesActivity.userGames.remove(position);
-                }
+                Boolean isUpdate = button.getText().toString().equals((String) getResources().getString(R.string.update_game));;
 
                 DummyUserGame newGame = new DummyUserGame();
 
@@ -84,23 +80,42 @@ public class AddUpdateGameActivity extends ActionBarActivity {
                     }
                 }
 
-                newGame.setTitle(gameTitleEditText.getText().toString());
-                newGame.setSystem((String) gameSystemSpinner.getSelectedItem());
+                if (TextUtils.isEmpty(title))
+                {
+                    gameTitleEditText.setError(getString(R.string.error_field_required));
+                    return;
+                }
+
+                Boolean aFlagWasChosen = checkFlags(flags);
+
+                if(!aFlagWasChosen)
+                {
+                    Toast.makeText(getApplicationContext(), getString(R.string.flag_not_chosen), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                newGame.setTitle(title);
+                newGame.setSystem(system);
                 newGame.setFlags(flags);
                 newGame.setDate(new Date().toString());
                 newGame.setImageUrl("https://flugelmeister.files.wordpress.com/2011/03/halo-2.jpg");
 
-
-                //NOTE: SAVE newGame into DB. Following code is just for testing
                 if(isUpdate)
                 {
-                    ViewGamesActivity.userGames.add(position, newGame);
-                    ViewGamesActivity.mCardArrayAdapter.notifyDataSetChanged();
+                    newGame.setDate(ViewGamesActivity.userGames.get(gameToBeEditedPosition).getDate());
+                    ViewGamesActivity.cards.remove(gameToBeEditedPosition);
+                    ViewGamesActivity.userGames.remove(gameToBeEditedPosition);
+
+                    UserGameCard newGameCard = new UserGameCard(ViewGamesActivity.context, R.layout.user_game_card_inner_content, newGame);
+                    ViewGamesActivity.userGames.add(gameToBeEditedPosition, newGame);
+                    ViewGamesActivity.cards.add(gameToBeEditedPosition, newGameCard);
+                    broadcaster = LocalBroadcastManager.getInstance(ViewGamesActivity.context);
+                    sendResult("update");
                 }else
                 {
                     ViewGamesActivity.userGames.add(newGame);
                 }
-
+                gameToBeEditedPosition = -1;
                 finish();
             }
         });
@@ -122,6 +137,7 @@ public class AddUpdateGameActivity extends ActionBarActivity {
         button.setText(getString(R.string.update_game));
 
         gameToBeEdited = (DummyUserGame) extras.getSerializable("editGame");
+        gameToBeEditedPosition = extras.getInt("position");
 
         gameTitleEditText.setText(gameToBeEdited.getTitle());
 
@@ -130,7 +146,7 @@ public class AddUpdateGameActivity extends ActionBarActivity {
 
         for(i = 0; i < platforms.length; i++)
         {
-            if(platforms[i].equals((String) gameToBeEdited.getSystem())) break;
+            if(platforms[i].equals(gameToBeEdited.getSystem())) break;
         }
 
         gameSystemSpinner.setSelection(i);
@@ -141,22 +157,45 @@ public class AddUpdateGameActivity extends ActionBarActivity {
         {
             Map.Entry pair = (Map.Entry)it.next();
 
-            if(pair.getKey().equals((String) "Share") && (Boolean) pair.getValue())
+            if(pair.getKey().equals("Share") && (Boolean) pair.getValue())
             {
                 checkBoxes[1].setChecked(true);
             }
 
-            if(pair.getKey().equals((String) "Sell") && (Boolean) pair.getValue())
+            if(pair.getKey().equals("Sell") && (Boolean) pair.getValue())
             {
                 checkBoxes[0].setChecked(true);
             }
 
-            if(pair.getKey().equals((String) "Trade") && (Boolean) pair.getValue())
+            if(pair.getKey().equals("Trade") && (Boolean) pair.getValue())
             {
                 checkBoxes[2].setChecked(true);
             }
         }
-        //end of edit
+    }
+
+    private Boolean checkFlags(HashMap<String, Boolean> flags) {
+
+        Iterator it = flags.entrySet().iterator();
+
+        while (it.hasNext())
+        {
+            Map.Entry pair = (Map.Entry)it.next();
+
+            if((Boolean) pair.getValue())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void sendResult(String message) {
+        Intent intent = new Intent(COPA_RESULT);
+        if(message != null)
+            intent.putExtra(message, message);
+        broadcaster.sendBroadcast(intent);
     }
 
     @Override

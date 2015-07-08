@@ -37,9 +37,12 @@
                 android:id="@+id/txt_login_error"/>
 
             <!--Sign in button-->
-            <Button android:id="@+id/user_sign_in_button" style="?android:textAppearanceSmall"
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:layout_marginTop="16dp" android:text="@string/action_sign_in_short"
+            <Button android:id="@+id/user_sign_in_button"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/action_sign_in_short"
                 android:textStyle="bold" />
 
             <!--Register label-->
