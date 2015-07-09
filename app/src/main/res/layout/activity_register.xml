@@ -30,7 +30,7 @@
 
             <EditText android:id="@+id/location_register" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:hint="@string/zipcode"
-                android:imeOptions="actionUnspecified" android:inputType="numberSigned"
+                android:imeOptions="actionUnspecified" android:inputType="textPostalAddress"
                 android:maxLines="1" android:singleLine="true" />
 
             <EditText android:id="@+id/password_register" android:layout_width="match_parent"

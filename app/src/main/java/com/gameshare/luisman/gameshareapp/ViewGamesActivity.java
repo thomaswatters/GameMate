@@ -1,24 +1,17 @@
 package com.gameshare.luisman.gameshareapp;
 
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
-
 import com.afollestad.materialdialogs.MaterialDialog;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
 import it.gmariotti.cardslib.library.view.CardListView;
@@ -67,22 +60,10 @@ public class ViewGamesActivity extends ActionBarActivity {
     protected void onStart() {
         // TODO Auto-generated method stub
         super.onStart();
-        LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter(AddUpdateGameActivity.COPA_RESULT));
+        LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter(AddUpdateGameActivity.RESULT));
     }
 
-//    @Override
-//    protected void onStop() {
-//        // TODO Auto-generated method stub
-////        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
-//        super.onStop();
-//    }
-
     private void updateData() {
-//        for(Card currentCard : cards)
-//        {
-//           // UserGameCard card = new UserGameCard(this, R.layout.user_game_card_inner_content, currentGame);
-//            cards.add(currentCard);
-//        }
         mCardArrayAdapter.notifyDataSetChanged();
     }
 
@@ -102,6 +83,8 @@ public class ViewGamesActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_delete_games) {
+
+            if(cards.size() == 0) return true;
 
             new MaterialDialog.Builder(context)
                     .content(R.string.delete_confirmation2)

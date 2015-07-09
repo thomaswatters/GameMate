@@ -1,20 +1,19 @@
 package com.gameshare.luisman.gameshareapp;
 
 
-import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.Date;
@@ -23,8 +22,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class AddUpdateGameActivity extends ActionBarActivity {
-    private Context updateContext;
-    static final public String COPA_RESULT = "com.controlj.copame.backend.COPAService.REQUEST_PROCESSED";
+
+    static final public String RESULT = "REQUEST_PROCESSED";
     private LocalBroadcastManager broadcaster;
     private EditText gameTitleEditText;
     private Spinner gameSystemSpinner;
@@ -109,10 +108,12 @@ public class AddUpdateGameActivity extends ActionBarActivity {
                     UserGameCard newGameCard = new UserGameCard(ViewGamesActivity.context, R.layout.user_game_card_inner_content, newGame);
                     ViewGamesActivity.userGames.add(gameToBeEditedPosition, newGame);
                     ViewGamesActivity.cards.add(gameToBeEditedPosition, newGameCard);
+                    //This is how it should be handled everything. not with static variables
                     broadcaster = LocalBroadcastManager.getInstance(ViewGamesActivity.context);
                     sendResult("update");
                 }else
                 {
+                    Toast.makeText(getApplicationContext(), newGame.getTitle() + getString(R.string.successfully_added), Toast.LENGTH_SHORT).show();
                     ViewGamesActivity.userGames.add(newGame);
                 }
                 gameToBeEditedPosition = -1;
@@ -192,7 +193,7 @@ public class AddUpdateGameActivity extends ActionBarActivity {
     }
 
     private void sendResult(String message) {
-        Intent intent = new Intent(COPA_RESULT);
+        Intent intent = new Intent(RESULT);
         if(message != null)
             intent.putExtra(message, message);
         broadcaster.sendBroadcast(intent);
