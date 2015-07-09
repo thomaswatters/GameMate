@@ -35,4 +35,7 @@ dependencies {
     //Optional for drag and drop
     compile 'com.github.gabrielemariotti.cards:cardslib-extra-dragdrop:2.1.0'
     compile 'com.afollestad:material-dialogs:0.7.6.0'
+    compile('com.mikepenz:actionitembadge:3.0.0@aar') {
+        transitive = true
+    }
 }

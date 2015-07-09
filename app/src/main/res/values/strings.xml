@@ -47,4 +47,10 @@
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="view_games">My Games</string>
     <string name="change_settings">Change Settings</string>
+    <string name="my_profile">My Profile</string>
+    <string name="old_password">Old Password</string>
+    <string name="new_password">New Password</string>
+    <string name="ok">OK</string>
+    <string name="change_password">Change Password</string>
+    <string name="cancel">Cancel</string>
 </resources>

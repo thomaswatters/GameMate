@@ -88,11 +88,17 @@ public class UserGameCard extends Card {
         systemTitleTv = (TextView) parent.findViewById(R.id.game_system);
         dateCreatedTv = (TextView) parent.findViewById(R.id.date);
         sellLayout = (LinearLayout) parent.findViewById(R.id.sell_layout);
+
         sellLayout.setVisibility(View.INVISIBLE);
+
         shareLayout = (LinearLayout) parent.findViewById(R.id.share_layout);
+
         shareLayout.setVisibility(View.INVISIBLE);
+
         tradeLayout = (LinearLayout) parent.findViewById(R.id.trade_layout);
+
         tradeLayout.setVisibility(View.INVISIBLE);
+
         new AsyncUploadImage(imageView, userGame.getImageUrl()).execute();
 
         systemTitleTv.setText(userGame.getSystem());
