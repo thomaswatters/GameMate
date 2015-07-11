@@ -1,16 +1,16 @@
 package com.gameshare.luisman.gameshareapp;
 
+import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -18,83 +18,56 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 
-import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardHeader;
-import it.gmariotti.cardslib.library.internal.base.BaseCard;
-
 /**
- * Created by LuisMan on 7/2/2015.
+ * Created by LuisMan on 7/9/2015.
  */
-public class UserGameCard extends Card {
+public class PublicGameAdapter extends ArrayAdapter<DummyUserGame> {
 
     protected ImageView imageView;
     protected TextView systemTitleTv;
     protected TextView dateCreatedTv;
+    protected TextView titleTv;
     protected LinearLayout sellLayout;
     protected LinearLayout shareLayout;
     protected LinearLayout tradeLayout;
     public DummyUserGame userGame;
+    ArrayList<DummyUserGame> data;
+    Context context;
+    int layout;
 
-    public UserGameCard(final Context context, int innerLayout, DummyUserGame userGame) {
-        super(context, innerLayout);
-
-        this.userGame = userGame;
-        CardHeader header = new CardHeader(context);
-        header.setTitle(userGame.getTitle());
-
-        header.setButtonOverflowVisible(true);
-        header.setPopupMenuListener(new CardHeader.OnClickCardHeaderPopupMenuListener() {
-            @Override
-            public void onMenuItemClick(BaseCard card, MenuItem item) {
-                if(item.getTitle() == "Edit")
-                {
-                    UserGameCard currentGameCard = (UserGameCard) card;
-                    int position = ViewUserGamesActivity.cards.indexOf(currentGameCard);
-
-                    DummyUserGame currentUserGame = currentGameCard.userGame;
-                    Intent intent = new Intent(context, AddUpdateGameActivity.class );
-                    intent.putExtra("editGame", currentUserGame);
-                    intent.putExtra("position", position);
-                    context.startActivity(intent);
-                }
-                if(item.getTitle() == "Delete")
-                {
-                    UserGameCard currentGameCard = (UserGameCard) card;
-                    ViewUserGamesActivity.showDeleteConfirmation(context, currentGameCard);
-                }
-            }
-        });
-
-        header.setPopupMenuPrepareListener(new CardHeader.OnPrepareCardHeaderPopupMenuListener() {
-            @Override
-            public boolean onPreparePopupMenu(BaseCard card, PopupMenu popupMenu) {
-                popupMenu.getMenu().add("Edit");
-                popupMenu.getMenu().add("Delete");
-                return true;
-            }
-        });
-
-        addCardHeader(header);
+    public PublicGameAdapter(Context context, int resource, ArrayList<DummyUserGame> data) {
+        super(context, resource, data);
+        this.context = context;
+        this.data = data;
+        this.layout = resource;
     }
 
     @Override
-    public void setupInnerViewElements(ViewGroup parent, View view) {
-        // TODO Auto-generated method stub
-        imageView = (ImageView) parent.findViewById(R.id.imageView);
-        systemTitleTv = (TextView) parent.findViewById(R.id.game_system);
-        dateCreatedTv = (TextView) parent.findViewById(R.id.date);
-        sellLayout = (LinearLayout) parent.findViewById(R.id.sell_layout);
+    public View getView(int position, View convertView, ViewGroup parent) {
+        LayoutInflater inflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        this.userGame = data.get(position);
+
+        View rowView = inflater.inflate(R.layout.public_game_layout, parent, false);
+
+        imageView = (ImageView) rowView.findViewById(R.id.imageView);
+        systemTitleTv = (TextView) rowView.findViewById(R.id.game_system);
+        dateCreatedTv = (TextView) rowView.findViewById(R.id.date);
+        sellLayout = (LinearLayout) rowView.findViewById(R.id.sell_layout);
+        titleTv = (TextView) rowView.findViewById(R.id.game_title);
 
         sellLayout.setVisibility(View.INVISIBLE);
 
-        shareLayout = (LinearLayout) parent.findViewById(R.id.share_layout);
+        shareLayout = (LinearLayout) rowView.findViewById(R.id.share_layout);
 
         shareLayout.setVisibility(View.INVISIBLE);
 
-        tradeLayout = (LinearLayout) parent.findViewById(R.id.trade_layout);
+        tradeLayout = (LinearLayout) rowView.findViewById(R.id.trade_layout);
 
         tradeLayout.setVisibility(View.INVISIBLE);
 
@@ -102,6 +75,7 @@ public class UserGameCard extends Card {
 
         systemTitleTv.setText(userGame.getSystem());
         dateCreatedTv.setText(userGame.getDate());
+        titleTv.setText(userGame.getTitle());
 
         Iterator it = userGame.getFlags().entrySet().iterator();
 
@@ -124,6 +98,9 @@ public class UserGameCard extends Card {
                 tradeLayout.setVisibility(View.VISIBLE);
             }
         }
+
+        return rowView;
+
     }
 
     public class AsyncUploadImage extends AsyncTask<Object, Object, Object> {

@@ -57,8 +57,13 @@ public class AddUpdateGameActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
 
+                boolean cancel = false;
+                View focusView = null;
+
                 gameTitleEditText.setError(null);
+
                 String title = gameTitleEditText.getText().toString();
+
                 String system = (String) gameSystemSpinner.getSelectedItem();
 
                 Boolean isUpdate = button.getText().toString().equals((String) getResources().getString(R.string.update_game));;
@@ -82,7 +87,8 @@ public class AddUpdateGameActivity extends ActionBarActivity {
                 if (TextUtils.isEmpty(title))
                 {
                     gameTitleEditText.setError(getString(R.string.error_field_required));
-                    return;
+                    focusView = gameTitleEditText;
+                    cancel = true;
                 }
 
                 Boolean aFlagWasChosen = checkFlags(flags);
@@ -99,25 +105,35 @@ public class AddUpdateGameActivity extends ActionBarActivity {
                 newGame.setDate(new Date().toString());
                 newGame.setImageUrl("https://flugelmeister.files.wordpress.com/2011/03/halo-2.jpg");
 
-                if(isUpdate)
+                if (cancel)
                 {
-                    newGame.setDate(ViewGamesActivity.userGames.get(gameToBeEditedPosition).getDate());
-                    ViewGamesActivity.cards.remove(gameToBeEditedPosition);
-                    ViewGamesActivity.userGames.remove(gameToBeEditedPosition);
+                    // There was an error; don't attempt login and focus the first
+                    // form field with an error.
+                    focusView.requestFocus();
+                } else
+                {
+                    if(isUpdate)
+                    {
+                        newGame.setDate(ViewUserGamesActivity.userGames.get(gameToBeEditedPosition).getDate());
+                        ViewUserGamesActivity.cards.remove(gameToBeEditedPosition);
+                        ViewUserGamesActivity.userGames.remove(gameToBeEditedPosition);
 
-                    UserGameCard newGameCard = new UserGameCard(ViewGamesActivity.context, R.layout.user_game_card_inner_content, newGame);
-                    ViewGamesActivity.userGames.add(gameToBeEditedPosition, newGame);
-                    ViewGamesActivity.cards.add(gameToBeEditedPosition, newGameCard);
-                    //This is how it should be handled everything. not with static variables
-                    broadcaster = LocalBroadcastManager.getInstance(ViewGamesActivity.context);
-                    sendResult("update");
-                }else
-                {
-                    Toast.makeText(getApplicationContext(), newGame.getTitle() + getString(R.string.successfully_added), Toast.LENGTH_SHORT).show();
-                    ViewGamesActivity.userGames.add(newGame);
+                        UserGameCard newGameCard = new UserGameCard(ViewUserGamesActivity.context, R.layout.user_game_card_inner_content, newGame);
+                        ViewUserGamesActivity.userGames.add(gameToBeEditedPosition, newGame);
+                        ViewUserGamesActivity.cards.add(gameToBeEditedPosition, newGameCard);
+                        //This is how it should be handled everything. not with static variables
+                        broadcaster = LocalBroadcastManager.getInstance(ViewUserGamesActivity.context);
+                        sendResult("update");
+                    }else
+                    {
+                        Toast.makeText(getApplicationContext(), newGame.getTitle() + getString(R.string.successfully_added), Toast.LENGTH_SHORT).show();
+                        ViewUserGamesActivity.userGames.add(newGame);
+                    }
+                    gameToBeEditedPosition = -1;
+                    finish();
+
                 }
-                gameToBeEditedPosition = -1;
-                finish();
+
             }
         });
 

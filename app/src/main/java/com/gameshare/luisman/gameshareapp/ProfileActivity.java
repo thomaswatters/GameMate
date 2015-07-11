@@ -4,17 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.mikepenz.actionitembadge.library.ActionItemBadge;
-import com.mikepenz.actionitembadge.library.ActionItemBadgeAdder;
 import com.mikepenz.iconics.typeface.FontAwesome;
 
 
@@ -46,7 +41,7 @@ public class ProfileActivity extends ActionBarActivity {
         buttons[1].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), ViewGamesActivity.class);
+                Intent i = new Intent(getApplicationContext(), ViewUserGamesActivity.class);
                 startActivity(i);
             }
         });
@@ -54,28 +49,8 @@ public class ProfileActivity extends ActionBarActivity {
         buttons[2].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean wrapInScrollView = true;
-
-                new MaterialDialog.Builder(context)
-                        .title(getString(R.string.change_settings))
-                        .customView(R.layout.change_settings, wrapInScrollView)
-                        .positiveText(getString(R.string.ok))
-                        .negativeText(getString(R.string.cancel))
-                        .callback(new MaterialDialog.ButtonCallback(){
-                            @Override
-                            public void onPositive(MaterialDialog dialog) {
-                                View oldPasswordView = dialog.findViewById(R.id.old_password);
-                                View oldPasswordConfirmation = dialog.findViewById(R.id.old_password2);
-                                View newPassword = dialog.findViewById(R.id.new_password);
-                                View newPasswordConfirmation = dialog.findViewById(R.id.new_password2);
-                                View zipcode = dialog.findViewById(R.id.new_location);
-                            }
-
-                            @Override
-                            public void onNegative(MaterialDialog dialog) {
-                            }
-                        })
-                        .show();
+                Intent i = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(i);
             }
         });
     }

@@ -1,22 +1,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    style="@style/list_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
-    <!-- This is the base Inner View inside a CardHeader.
-         You can customize it with your layout xml file and your CardHeader.
-         You can popolate your element with CardHeader#setupInnerViewElements() method -->
-
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ffffff">
+        android:background="#ffffff"
+        android:layout_marginTop="5dp">
 
 
         <ImageView
+            android:layout_marginLeft="5dp"
             android:layout_width="50dp"
             android:layout_height="85dp"
             android:id="@+id/imageView"
@@ -30,17 +26,30 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/game_system"
+                android:id="@+id/game_title"
                 style="@style/native_list_card.thumbnail"
                 android:textSize="15sp"
                 android:background="#ffffff"
-                android:paddingLeft="10dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:textColor="#000000"
+                android:text="@string/game_title"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/game_system"
+                style="@style/native_list_card.thumbnail"
+                android:textSize="15sp"
                 android:gravity="center_vertical|center_horizontal"
                 android:textColor="#000000"
                 android:text="@string/game_system"
-                android:layout_centerVertical="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_below="@+id/game_title"
+                android:layout_centerHorizontal="true" />
         </RelativeLayout>
 
         <LinearLayout
@@ -122,6 +131,16 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/username"
+            android:id="@+id/username"
+            android:gravity="center_vertical|center_horizontal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/date"
             android:id="@+id/date"

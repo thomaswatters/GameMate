@@ -23,7 +23,7 @@
             android:label="@string/title_activity_register" >
         </activity>
         <activity
-            android:name=".ViewGamesActivity"
+            android:name=".ViewUserGamesActivity"
             android:label="@string/my_games" >
         </activity>
         <activity
@@ -33,6 +33,14 @@
         <activity
             android:name=".ProfileActivity"
             android:label="@string/title_activity_profile" >
+        </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings" >
+        </activity>
+        <activity
+            android:name=".SearchGamesActivity"
+            android:label="@string/search" >
         </activity>
     </application>
 

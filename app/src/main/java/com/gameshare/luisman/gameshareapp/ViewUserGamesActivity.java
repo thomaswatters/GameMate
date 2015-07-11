@@ -17,7 +17,7 @@ import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
 import it.gmariotti.cardslib.library.view.CardListView;
 
 
-public class ViewGamesActivity extends ActionBarActivity {
+public class ViewUserGamesActivity extends ActionBarActivity {
     public static Context context;
     public static ArrayList<DummyUserGame> userGames = new ArrayList<>();
     public static ArrayList<Card> cards = null;

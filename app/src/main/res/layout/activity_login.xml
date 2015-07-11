@@ -78,6 +78,13 @@
                 android:text="User Profile"
                 android:id="@+id/temp_button_user_profile" />
 
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Search Games"
+                android:id="@+id/search_games" />
+
         </LinearLayout>
     </ScrollView>
 

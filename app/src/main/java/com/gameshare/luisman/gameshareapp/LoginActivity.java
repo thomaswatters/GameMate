@@ -52,6 +52,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 //    private Button myGamesButton;
 //    private Button addGameButton;
     private Button userProfileButton;
+    private Button searchGamesButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,26 +60,16 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         //REMOVE THIS AFTER TEST
 
-//        myGamesButton = (Button) findViewById(R.id.temp_button_my_games);
-//        addGameButton = (Button) findViewById(R.id.temp_button_add_game);
         userProfileButton = (Button) findViewById(R.id.temp_button_user_profile);
-//
-//        myGamesButton.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                Intent i = new Intent(getApplicationContext(), ViewGamesActivity.class);
-//                startActivity(i);
-//            }
-//        });
-//
-//        addGameButton.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent i = new Intent(getApplicationContext(), AddUpdateGameActivity.class);
-//                startActivity(i);
-//            }
-//        });
+        searchGamesButton = (Button) findViewById(R.id.search_games);
+
+        searchGamesButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), SearchGamesActivity.class);
+                startActivity(i);
+            }
+        });
 
         userProfileButton.setOnClickListener(new OnClickListener() {
             @Override
