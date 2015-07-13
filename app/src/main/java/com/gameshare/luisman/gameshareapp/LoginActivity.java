@@ -16,6 +16,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -46,40 +47,13 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private LocalBroadcastManager broadcaster;
+    static final public String RESULT = "REQUEST_PROCESSED";
 
-
-    //temp buttons
-//    private Button myGamesButton;
-//    private Button addGameButton;
-    private Button userProfileButton;
-    private Button searchGamesButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        //REMOVE THIS AFTER TEST
-
-        userProfileButton = (Button) findViewById(R.id.temp_button_user_profile);
-        searchGamesButton = (Button) findViewById(R.id.search_games);
-
-        searchGamesButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), SearchGamesActivity.class);
-                startActivity(i);
-            }
-        });
-
-        userProfileButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
-                startActivity(i);
-            }
-        });
-
-        //END TEST
 
         // Set up the login form.
         mUsernameView = (AutoCompleteTextView) findViewById(R.id.username);
@@ -225,11 +199,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                     SharedPreferences sp = getSharedPreferences("UserCred", MODE_PRIVATE);
                     sp.edit().clear();
                     sp.edit().commit();
-
                     error_msg = message;
-
-
-
                     return false;
                 }
                 else
@@ -257,13 +227,11 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
             if (success) {
                 Toast.makeText(getApplicationContext(), getString(R.string.success) + " " + mUsername, Toast.LENGTH_LONG ).show();
-//                finish();
+                broadcaster = LocalBroadcastManager.getInstance(SearchGamesActivity.context);
+                sendResult("update");
+                finish();
             } else {
-
-
                 ((TextView)findViewById(R.id.txt_login_error)).setText(error_msg);
-//                mPasswordView.setError(error_msg);
-//                mPasswordView.requestFocus();
             }
         }
 
@@ -275,14 +243,15 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     }
 
 
+    private void sendResult(String message) {
+        Intent intent = new Intent(RESULT);
+        if(message != null){
+            intent.putExtra(message, message);
+            intent.putExtra("isAuth", true);
+        }
 
-
-
-
-
-
-
-
+        broadcaster.sendBroadcast(intent);
+    }
 
     /*Stuff we don't need*/
 

@@ -14,9 +14,18 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
+            android:name=".SearchGamesActivity"
+            android:label="@string/game_mate" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="com.gameshare.luisman.gameshareapp"/>
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".LoginActivity"
-            android:label="@string/app_name"
-            android:windowSoftInputMode="adjustResize|stateVisible" >
+            android:label="@string/app_name">
         </activity>
         <activity
             android:name=".RegisterActivity"
@@ -38,10 +47,7 @@
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
-        <activity
-            android:name=".SearchGamesActivity"
-            android:label="@string/search" >
-        </activity>
+
     </application>
 
 </manifest>

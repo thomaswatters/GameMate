@@ -121,9 +121,10 @@ public class AddUpdateGameActivity extends ActionBarActivity {
                         UserGameCard newGameCard = new UserGameCard(ViewUserGamesActivity.context, R.layout.user_game_card_inner_content, newGame);
                         ViewUserGamesActivity.userGames.add(gameToBeEditedPosition, newGame);
                         ViewUserGamesActivity.cards.add(gameToBeEditedPosition, newGameCard);
+                        ViewUserGamesActivity.mCardArrayAdapter.notifyDataSetChanged();
                         //This is how it should be handled everything. not with static variables
-                        broadcaster = LocalBroadcastManager.getInstance(ViewUserGamesActivity.context);
-                        sendResult("update");
+                  //      broadcaster = LocalBroadcastManager.getInstance(ViewUserGamesActivity.context);
+                //        sendResult("update");
                     }else
                     {
                         Toast.makeText(getApplicationContext(), newGame.getTitle() + getString(R.string.successfully_added), Toast.LENGTH_SHORT).show();

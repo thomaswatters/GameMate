@@ -49,6 +49,14 @@
         <item>View Profile</item>
         <item>Send Message</item>
     </string-array>
+    <string-array name="drawer_array">
+        <item>Profile</item>
+        <item>Sign in/Register</item>
+    </string-array>
+    <string-array name="drawer_array2">
+        <item>Profile</item>
+        <item>Sign out</item>
+    </string-array>
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="view_games">My Games</string>
     <string name="change_settings">Change Settings</string>
@@ -68,4 +76,8 @@
     <string name="game_example">Halo 2</string>
     <string name="searching">"Searching for "</string>
     <string name="please_wait">Please wait...</string>
+    <string name="game_mate">GameMate</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="logged_out_confirmation">Successfully logged out</string>
 </resources>
