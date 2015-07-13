@@ -24,6 +24,7 @@
     <string name="my_games">My Games</string>
     <string name="delete_confirmation">Are you sure you want to delete this game?</string>
     <string name="delete_confirmation2">Are you sure you want to delete all your games?</string>
+    <string name="delete_confirmation3">Are you sure you want to delete all your messages?</string>
     <string name="delete_title">\?!?</string>
     <string name="confirm_delete">Kill it!</string>
     <string name="confirm_delete2">Kill them!</string>
@@ -80,4 +81,9 @@
     <string name="drawer_close">Close navigation drawer</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="logged_out_confirmation">Successfully logged out</string>
+    <string name="title_activity_inbox">InboxActivity</string>
+    <string name="message">Message</string>
+    <string name="delete_all_messages">Delete all messages</string>
+    <string name="my_inbox">My Inbox</string>
+    <string name="reply">Reply</string>
 </resources>

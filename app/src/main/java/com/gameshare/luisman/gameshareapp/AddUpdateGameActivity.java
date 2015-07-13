@@ -16,6 +16,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -102,7 +104,11 @@ public class AddUpdateGameActivity extends ActionBarActivity {
                 newGame.setTitle(title);
                 newGame.setSystem(system);
                 newGame.setFlags(flags);
-                newGame.setDate(new Date().toString());
+
+                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                Date date = new Date();
+
+                newGame.setDate(dateFormat.format(date));
                 newGame.setImageUrl("https://flugelmeister.files.wordpress.com/2011/03/halo-2.jpg");
 
                 if (cancel)

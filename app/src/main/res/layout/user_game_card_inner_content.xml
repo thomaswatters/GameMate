@@ -4,11 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <!-- This is the base Inner View inside a CardHeader.
-         You can customize it with your layout xml file and your CardHeader.
-         You can popolate your element with CardHeader#setupInnerViewElements() method -->
-
-
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
