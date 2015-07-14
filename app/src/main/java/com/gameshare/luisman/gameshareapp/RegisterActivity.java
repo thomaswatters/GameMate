@@ -3,6 +3,7 @@ package com.gameshare.luisman.gameshareapp;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -38,7 +39,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 
-public class RegisterActivity extends ActionBarActivity {
+public class RegisterActivity extends Activity {
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -58,9 +59,6 @@ public class RegisterActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
 
         // Set up the register form.
         mUsernameView = (AutoCompleteTextView) findViewById(R.id.username_register);

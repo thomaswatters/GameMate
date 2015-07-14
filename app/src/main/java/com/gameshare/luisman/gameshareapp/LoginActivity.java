@@ -16,11 +16,10 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -30,7 +29,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 
 /**
@@ -38,13 +36,6 @@ import java.util.regex.Pattern;
  */
 public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "lumalav:Hello1234*"
-    };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -56,6 +47,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private LocalBroadcastManager broadcaster;
+    static final public String RESULT = "REQUEST_PROCESSED";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,6 +168,93 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         }
     }
 
+    /**
+     * Represents an asynchronous login/registration task used to authenticate
+     * the user.
+     */
+    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+
+        private final String mUsername;
+        private final String mPassword;
+
+        private String error_msg;
+
+        UserLoginTask(String username, String password) {
+            mUsername = username;
+            mPassword = password;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
+
+
+            AuthServiceProvider auth = new AuthServiceProvider();
+
+            try
+            {
+                String message = auth.Login(mUsername, mPassword);
+                if(auth.isBadRequest())
+                {
+                    SharedPreferences sp = getSharedPreferences("UserCred", MODE_PRIVATE);
+                    sp.edit().clear();
+                    sp.edit().commit();
+                    error_msg = message;
+                    return false;
+                }
+                else
+                {
+                    SharedPreferences sp = getSharedPreferences("UserCred", MODE_PRIVATE);
+                    sp.edit().putString("Token", message);
+                    sp.edit().putBoolean("IsAuth", true);
+                    sp.edit().commit();
+
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            mAuthTask = null;
+            showProgress(false);
+
+            if (success) {
+                Toast.makeText(getApplicationContext(), getString(R.string.success) + " " + mUsername, Toast.LENGTH_LONG ).show();
+                broadcaster = LocalBroadcastManager.getInstance(SearchGamesActivity.context);
+                sendResult("update");
+                finish();
+            } else {
+                ((TextView)findViewById(R.id.txt_login_error)).setText(error_msg);
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mAuthTask = null;
+            showProgress(false);
+        }
+    }
+
+
+    private void sendResult(String message) {
+        Intent intent = new Intent(RESULT);
+        if(message != null){
+            intent.putExtra(message, message);
+            intent.putExtra("isAuth", true);
+        }
+
+        broadcaster.sendBroadcast(intent);
+    }
+
+    /*Stuff we don't need*/
+
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return new CursorLoader(this,
@@ -227,104 +307,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mUsernameView.setAdapter(adapter);
-    }
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mUsername;
-        private final String mPassword;
-
-        private String error_msg;
-
-        UserLoginTask(String username, String password) {
-            mUsername = username;
-            mPassword = password;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-
-            AuthServiceProvider auth = new AuthServiceProvider();
-
-            try
-            {
-                String message = auth.Login(mUsername, mPassword);
-                if(auth.isBadRequest())
-                {
-                    SharedPreferences sp = getSharedPreferences("UserCred", MODE_PRIVATE);
-                    sp.edit().clear();
-                    sp.edit().commit();
-
-                    error_msg = message;
-
-
-
-                    return false;
-                }
-                else
-                {
-                    SharedPreferences sp = getSharedPreferences("UserCred", MODE_PRIVATE);
-                    sp.edit().putString("Token", message);
-                    sp.edit().putBoolean("IsAuth", true);
-                    sp.edit().commit();
-
-                    return true;
-                }
-            }
-            catch (Exception e)
-            {
-
-            }
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mUsername)) {
-                    // Account exists, return true if the password matches.
-
-                    return pieces[1].equals(mPassword);
-                } else{
-                    return false;
-                }
-            }
-
-            // TODO: register the new account here.
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                Toast.makeText(getApplicationContext(), getString(R.string.success) + " " + mUsername, Toast.LENGTH_LONG ).show();
-//                finish();
-            } else {
-
-
-                ((TextView)findViewById(R.id.txt_login_error)).setText(error_msg);
-//                mPasswordView.setError(error_msg);
-//                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
     }
 }
 

@@ -37,9 +37,12 @@
                 android:id="@+id/txt_login_error"/>
 
             <!--Sign in button-->
-            <Button android:id="@+id/user_sign_in_button" style="?android:textAppearanceSmall"
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:layout_marginTop="16dp" android:text="@string/action_sign_in_short"
+            <Button android:id="@+id/user_sign_in_button"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/action_sign_in_short"
                 android:textStyle="bold" />
 
             <!--Register label-->
@@ -51,6 +54,22 @@
                 android:layout_gravity="center_horizontal"
                 android:onClick="startRegisterActivity"
                 android:clickable="true"/>
+
+
+            <!--Temp buttons-->
+            <!--<Button-->
+                <!--style="?android:attr/buttonStyleSmall"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="My Games"-->
+                <!--android:id="@+id/temp_button_my_games" />-->
+
+            <!--<Button-->
+                <!--style="?android:attr/buttonStyleSmall"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Add Game"-->
+                <!--android:id="@+id/temp_button_add_game" />-->
 
         </LinearLayout>
     </ScrollView>
