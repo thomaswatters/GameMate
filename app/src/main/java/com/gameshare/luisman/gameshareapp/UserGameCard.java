@@ -101,6 +101,7 @@ public class UserGameCard extends Card {
         new AsyncUploadImage(imageView, userGame.getImageUrl()).execute();
 
         systemTitleTv.setText(userGame.getSystem());
+
         dateCreatedTv.setText(userGame.getDate());
 
         Iterator it = userGame.getFlags().entrySet().iterator();
