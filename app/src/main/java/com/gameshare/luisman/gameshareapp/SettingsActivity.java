@@ -1,9 +1,11 @@
 package com.gameshare.luisman.gameshareapp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.InputType;
@@ -19,6 +21,11 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 
@@ -26,10 +33,50 @@ public class SettingsActivity extends ActionBarActivity {
 
     private Button[] buttons = new  Button[2];
     private Context context;
+    UserDataModel userData;
+
+    private class GetUserTask extends AsyncTask
+    {
+        private UserDataModel userData;
+        GetUserTask(UserDataModel userData)
+        {
+            this.userData = userData;
+        }
+
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+
+            AccountServiceProvider ser = new AccountServiceProvider(getApplicationContext());
+
+            JSONObject json = ser.GetUserInfo(userData.UserName);
+
+            try {
+                userData.Email = json.getString("email");
+                userData.ZipCode = json.getString("zipCode");
+            }
+            catch (Exception e)
+            {}
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+
+
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        userData = new UserDataModel();
+        userData.UserName = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("UserName", " ");
+
+        GetUserTask userTask = new GetUserTask(userData);
+        userTask.execute();
 
         context = this;
 
@@ -44,7 +91,7 @@ public class SettingsActivity extends ActionBarActivity {
 
                 boolean wrapInScrollView = true;
 
-                new MaterialDialog.Builder(context)
+              MaterialDialog dialog =  new MaterialDialog.Builder(context)
                         .title(getString(R.string.change_password))
                         .customView(R.layout.change_password_settings, wrapInScrollView)
                         .inputType(InputType.TYPE_CLASS_TEXT |
@@ -54,6 +101,8 @@ public class SettingsActivity extends ActionBarActivity {
                         .negativeText(getString(R.string.cancel))
                         .alwaysCallInputCallback()
                         .callback(new MaterialDialog.ButtonCallback() {
+
+
                             @Override
                             public void onPositive(MaterialDialog dialog) {
                                 EditText oldPasswordView = (EditText) dialog.findViewById(R.id.old_password);
@@ -76,6 +125,9 @@ public class SettingsActivity extends ActionBarActivity {
 
                                 }
 
+                                ChangePasswordTask task = new ChangePasswordTask(oldPassword, newPassword, confirmedPassword);
+                                task.execute();
+
 
                             }
 
@@ -92,28 +144,38 @@ public class SettingsActivity extends ActionBarActivity {
             public void onClick(View v) {
                 boolean wrapInScrollView = true;
 
-                new MaterialDialog.Builder(context)
+                MaterialDialog dialog = new MaterialDialog.Builder(context)
                         .title(getString(R.string.change_email_location))
                         .customView(R.layout.change_other_settings, wrapInScrollView)
                         .positiveText(getString(R.string.ok))
                         .negativeText(getString(R.string.cancel))
-                        .callback(new MaterialDialog.ButtonCallback(){
+                        .callback(new MaterialDialog.ButtonCallback() {
                             @Override
                             public void onPositive(MaterialDialog dialog) {
                                 EditText locationView = (EditText) dialog.findViewById(R.id.new_location);
                                 EditText emailView = (EditText) dialog.findViewById(R.id.new_email);
-                                EditText passwordView = (EditText)dialog.findViewById(R.id.current_password);
+                                EditText passwordView = (EditText) dialog.findViewById(R.id.current_password);
 
 
                             }
+
 
                             @Override
                             public void onNegative(MaterialDialog dialog) {
                             }
                         })
                         .show();
+
+                ((EditText)dialog.getCustomView().findViewById(R.id.new_location)).setText(userData.ZipCode);
+
+                ((EditText)dialog.getCustomView().findViewById(R.id.new_email)).setText(userData.Email);
             }
+
+
         });
+
+
+
     }
 
     private boolean isZipcodeValid(String zipcode) {
@@ -171,14 +233,22 @@ public class SettingsActivity extends ActionBarActivity {
             // TODO: attempt authentication against a network service.
 
 
-            AuthServiceProvider auth = new AuthServiceProvider();
+            AccountServiceProvider ser = new AccountServiceProvider(getApplicationContext());
+            List<String> errors = new ArrayList<String>();
 
             try
             {
 //                String message = auth.Login(mUsername, mPassword);
+                JSONObject json = ser.ChangePassword(oldPassword, newPassword, confirmedPassword);
 
-                if(auth.isBadRequest())
+
+                if(ser.isBadRequest())
                 {
+                        JSONArray modelState = json.getJSONArray("modelState");
+                        for(int i = 0; i < modelState.length(); i++)
+                        {
+                        }
+
 //                    SharedPreferences sp = getSharedPreferences("UserCred", MODE_PRIVATE);
 //                    sp.edit().clear();
 //                    sp.edit().commit();
