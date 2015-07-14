@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -196,18 +197,23 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 String message = auth.Login(mUsername, mPassword);
                 if(auth.isBadRequest())
                 {
-                    SharedPreferences sp = getSharedPreferences("UserCred", MODE_PRIVATE);
-                    sp.edit().clear();
-                    sp.edit().commit();
+                    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.remove("Token");
+                    editor.remove("UserName");
+                    editor.remove("IsAuth");
+                    editor.commit();
                     error_msg = message;
                     return false;
                 }
                 else
                 {
-                    SharedPreferences sp = getSharedPreferences("UserCred", MODE_PRIVATE);
-                    sp.edit().putString("Token", message);
-                    sp.edit().putBoolean("IsAuth", true);
-                    sp.edit().commit();
+                    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString("Token", message);
+                    editor.putString("UserName", mUsername);
+                    editor.putBoolean("IsAuth", true);
+                    editor.commit();
 
                     return true;
                 }
