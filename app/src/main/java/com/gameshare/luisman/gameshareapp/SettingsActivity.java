@@ -91,7 +91,8 @@ public class SettingsActivity extends ActionBarActivity {
 
                 boolean wrapInScrollView = true;
 
-              MaterialDialog dialog =  new MaterialDialog.Builder(context)
+                new MaterialDialog.Builder(context)
+                        .autoDismiss(false)
                         .title(getString(R.string.change_password))
                         .customView(R.layout.change_password_settings, wrapInScrollView)
                         .inputType(InputType.TYPE_CLASS_TEXT |
@@ -101,38 +102,55 @@ public class SettingsActivity extends ActionBarActivity {
                         .negativeText(getString(R.string.cancel))
                         .alwaysCallInputCallback()
                         .callback(new MaterialDialog.ButtonCallback() {
-
-
                             @Override
                             public void onPositive(MaterialDialog dialog) {
                                 EditText oldPasswordView = (EditText) dialog.findViewById(R.id.old_password);
                                 EditText newPasswordView = (EditText) dialog.findViewById(R.id.new_password);
                                 EditText newPasswordConfirmationView = (EditText) dialog.findViewById(R.id.new_password2);
 
+                                oldPasswordView.setError(null);
+                                newPasswordView.setError(null);
+                                newPasswordConfirmationView.setError(null);
+
                                 String oldPassword = oldPasswordView.getText().toString();
                                 String newPassword = newPasswordView.getText().toString();
                                 String confirmedPassword = newPasswordConfirmationView.getText().toString();
 
                                 if (TextUtils.isEmpty(oldPassword)) {
-
+                                    oldPasswordView.setError(getString(R.string.error_field_required));
+                                    return;
                                 }
 
                                 if (TextUtils.isEmpty(newPassword)) {
-
+                                    newPasswordView.setError(getString(R.string.error_field_required));
+                                    return;
                                 }
 
                                 if (TextUtils.isEmpty(confirmedPassword)) {
-
+                                    newPasswordConfirmationView.setError(getString(R.string.error_field_required));
+                                    return;
                                 }
+
+                                // Check for a valid password, if the user entered one.
+                                if (!isPasswordValid(newPassword)) {
+                                    newPasswordView.setError(getString(R.string.error_invalid_password));
+                                    return;
+                                } else
+                                    //Check if password match
+                                    if(!PasswordsMatches(newPassword, confirmedPassword)){
+                                        newPasswordConfirmationView.setError(getString(R.string.error_incorrect_password));
+                                        return;
+                                    }
 
                                 ChangePasswordTask task = new ChangePasswordTask(oldPassword, newPassword, confirmedPassword);
                                 task.execute();
 
-
+                                dialog.dismiss();
                             }
 
                             @Override
                             public void onNegative(MaterialDialog dialog) {
+                                dialog.dismiss();
                             }
                         })
                         .show();
@@ -145,6 +163,7 @@ public class SettingsActivity extends ActionBarActivity {
                 boolean wrapInScrollView = true;
 
                 MaterialDialog dialog = new MaterialDialog.Builder(context)
+                        .autoDismiss(false)
                         .title(getString(R.string.change_email_location))
                         .customView(R.layout.change_other_settings, wrapInScrollView)
                         .positiveText(getString(R.string.ok))
@@ -156,12 +175,48 @@ public class SettingsActivity extends ActionBarActivity {
                                 EditText emailView = (EditText) dialog.findViewById(R.id.new_email);
                                 EditText passwordView = (EditText) dialog.findViewById(R.id.current_password);
 
+                                String password = passwordView.getText().toString();
+                                String email = emailView.getText().toString();
+                                String location = locationView.getText().toString();
 
+                                locationView.setError(null);
+                                emailView.setError(null);
+                                passwordView.setError(null);
+
+                                //check email
+                                if (TextUtils.isEmpty(email)) {
+                                    emailView.setError(getString(R.string.error_field_required));
+                                    return;
+                                } else if (!isEmailValid(email)) {
+                                    emailView.setError(getString(R.string.error_invalid_email));
+                                    return;
+                                }
+
+                                //Check zipcode
+                                if (TextUtils.isEmpty(location)) {
+                                    locationView.setError(getString(R.string.error_field_required));
+                                    return;
+                                } else if (!isZipcodeValid(location)) {
+                                    locationView.setError(getString(R.string.error_invalid_zipcode));
+                                    return;
+                                }
+
+                                if (TextUtils.isEmpty(password)) {
+                                    passwordView.setError(getString(R.string.error_field_required));
+                                    return;
+                                }
+
+                                ChangeOtherSettings task = new ChangeOtherSettings(password, location, email);
+
+                                task.execute();
+
+                                dialog.dismiss();
                             }
 
 
                             @Override
                             public void onNegative(MaterialDialog dialog) {
+                                dialog.dismiss();
                             }
                         })
                         .show();
@@ -188,6 +243,10 @@ public class SettingsActivity extends ActionBarActivity {
 
     private boolean PasswordsMatches(String password, String confirmPassword) {
         return password.equalsIgnoreCase(confirmPassword);
+    }
+
+    private boolean isPasswordValid(String password) {
+        return Pattern.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[#$!%^&+=*])(?=\\S+$).{8,}$", password);
     }
 
     @Override
@@ -234,13 +293,11 @@ public class SettingsActivity extends ActionBarActivity {
 
 
             AccountServiceProvider ser = new AccountServiceProvider(getApplicationContext());
-            List<String> errors = new ArrayList<String>();
+            List<String> errors = new ArrayList<>();
 
             try
             {
-//                String message = auth.Login(mUsername, mPassword);
                 JSONObject json = ser.ChangePassword(oldPassword, newPassword, confirmedPassword);
-
 
                 if(ser.isBadRequest())
                 {
@@ -254,7 +311,6 @@ public class SettingsActivity extends ActionBarActivity {
 //                    sp.edit().commit();
 //
 //                    error_msg = message;
-
 
 
                     return false;
@@ -312,14 +368,20 @@ public class SettingsActivity extends ActionBarActivity {
             // TODO: attempt authentication against a network service.
 
 
-            AuthServiceProvider auth = new AuthServiceProvider();
+            AccountServiceProvider ser = new AccountServiceProvider(getApplicationContext());
+            List<String> errors = new ArrayList<>();
 
             try
             {
-//                String message = auth.Login(mUsername, mPassword);
+                JSONObject json = ser.UpdateSettings(location, email, password);
 
-                if(auth.isBadRequest())
+                if(ser.isBadRequest())
                 {
+                    JSONArray modelState = json.getJSONArray("modelState");
+                    for(int i = 0; i < modelState.length(); i++)
+                    {
+                    }
+
 //                    SharedPreferences sp = getSharedPreferences("UserCred", MODE_PRIVATE);
 //                    sp.edit().clear();
 //                    sp.edit().commit();

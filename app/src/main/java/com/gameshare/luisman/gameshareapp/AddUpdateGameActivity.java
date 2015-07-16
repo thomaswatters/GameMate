@@ -2,7 +2,10 @@ package com.gameshare.luisman.gameshareapp;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
@@ -16,11 +19,16 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class AddUpdateGameActivity extends ActionBarActivity {
@@ -40,10 +48,14 @@ public class AddUpdateGameActivity extends ActionBarActivity {
 
     private DummyUserGame gameToBeEdited;
     private int gameToBeEditedPosition;
+    private String username;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_game);
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        username = sp.getString("UserName", "");
 
         gameTitleEditText = (EditText) findViewById(R.id.game_title);
         gameSystemSpinner = (Spinner) findViewById(R.id.spinner);
@@ -133,6 +145,21 @@ public class AddUpdateGameActivity extends ActionBarActivity {
                 //        sendResult("update");
                     }else
                     {
+                        List<String> flagsList = new ArrayList<>();
+
+                        Iterator it = newGame.getFlags().entrySet().iterator();
+
+                        while (it.hasNext()) {
+                            Map.Entry pair = (Map.Entry) it.next();
+
+                            if((Boolean) pair.getValue())
+                                flagsList.add((String) pair.getKey());
+                        }
+
+
+                        AddGameTask task = new AddGameTask(newGame.getTitle(), newGame.getSystem(), flagsList);
+                        task.execute();
+
                         Toast.makeText(getApplicationContext(), newGame.getTitle() + getString(R.string.successfully_added), Toast.LENGTH_SHORT).show();
                         ViewUserGamesActivity.userGames.add(newGame);
                     }
@@ -242,5 +269,78 @@ public class AddUpdateGameActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public class AddGameTask extends AsyncTask<Void, Void, Boolean> {
+
+        private final String title;
+        private final String gameSystem;
+        private final List<String> flags;
+
+        private String error_msg;
+
+        AddGameTask(String title, String gameSystem, List<String> flags) {
+            this.title = title;
+            this.gameSystem = gameSystem;
+            this.flags = flags;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
+
+
+            AccountServiceProvider ser = new AccountServiceProvider(getApplicationContext());
+            List<String> errors = new ArrayList<>();
+
+            try
+            {
+                JSONObject json = ser.AddGame(title, gameSystem, flags, username);
+
+                if(ser.isBadRequest())
+                {
+                    JSONArray modelState = json.getJSONArray("modelState");
+                    for(int i = 0; i < modelState.length(); i++)
+                    {
+                    }
+
+//                    SharedPreferences sp = getSharedPreferences("UserCred", MODE_PRIVATE);
+//                    sp.edit().clear();
+//                    sp.edit().commit();
+//
+//                    error_msg = message;
+
+
+
+                    return false;
+                }
+                else
+                {
+//                    SharedPreferences sp = getSharedPreferences("UserCred", MODE_PRIVATE);
+//                    sp.edit().putString("Token", message);
+//                    sp.edit().putBoolean("IsAuth", true);
+//                    sp.edit().commit();
+
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+
+            if (success) {
+
+            } else {
+
+
+            }
+        }
     }
 }
