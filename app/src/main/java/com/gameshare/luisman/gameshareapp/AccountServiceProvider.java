@@ -183,7 +183,7 @@ public class AccountServiceProvider {
         model.Email = email;
         model.Password = password;
 
-        return postAPI("api/accounts/UpdateSettings", model);
+        return postAPI("api/accounts/UpdateUser", model);
     }
 
     public JSONObject GetUserInfo(String username)
